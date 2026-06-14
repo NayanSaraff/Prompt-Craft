@@ -539,14 +539,26 @@ body.modal-open { overflow: hidden; }
 
 /* Response Body */
 .response-body {
-  flex: 1; height: 420px;
-  overflow-y: auto; overflow-x: hidden;
-  scroll-behavior: smooth; padding: 18px;
+  /* Fixed height — content scrolls inside, never grows the page */
+  height: 420px;
+  max-height: 420px;
+  min-height: 420px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  padding: 18px;
+  flex: none;
 }
+/* Custom slim scrollbar — webkit */
 .response-body::-webkit-scrollbar { width: 5px; }
 .response-body::-webkit-scrollbar-track { background: transparent; }
-.response-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+.response-body::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
 .response-body::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+/* Firefox */
+.response-body { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 
 .response-empty {
   display: flex; flex-direction: column; align-items: center;
