@@ -188,63 +188,6 @@ Expected output:
 | POST | `/api/confidence` | Self-rate the AI response |
 | GET | `/api/health` | Server health check |
 
----
-
-## 📸 Screenshots
-
-### Home (Light Mode)
-Two-panel layout with animated mode cards, language + length controls, prompt quality bar, live prompt preview, drag & drop textarea, and auto-detect / improve prompt links.
-
-### Streaming Response (Dark Mode)
-Response text streams word-by-word with blinking cursor. Confidence bar appears above the response box after completion.
-
-### Flashcard Mode (Quiz)
-After a Quiz response, 5 flip cards appear below with Got it / Again scoring. Cards flip with smooth 3D animation on click.
-
-### Prompt Improver Modal
-Side-by-side comparison of original vs AI-improved prompt with a "Use Improved Prompt" button.
-
-### Tone Analyzer Modal
-Two cards showing before/after formality score (1-10), tone label, and keyword badges.
-
-### Activity Heatmap
-91-day GitHub-style calendar grid with intensity shading and date tooltips on hover.
-
-### Word Cloud
-Top 20 studied topics rendered as sized colored chips, sized by frequency.
-
-### Stats Modal
-4-metric grid + horizontal bar chart of mode usage.
-
----
-
-## 🎬 Demo Video Script (2 minutes)
-
-**[0:00–0:12] Intro**
-> "This is PromptCraft v3 — a full-stack AI toolkit built with Node.js, Express, and Groq's LLaMA 3.3 70B. Let me show you what makes it unique."
-
-**[0:12–0:30] Input Panel**
-> "Instead of a plain dropdown, modes are animated cards. As I type, a Prompt Quality bar rates my input in real-time. I can preview the exact prompt being sent to Groq before I submit. I can also drag and drop a .txt file directly into the text area."
-
-**[0:30–0:45] Auto-Detect + Improve**
-> "I'll paste some text and hit Auto-detect — the AI picks the best mode automatically. Then I'll hit Improve Prompt — a modal shows my original vs the AI-improved version side by side. I'll use the improved version."
-
-**[0:45–1:05] Streaming + Confidence + Tone**
-> "Hitting Generate streams the response word-by-word in real time. When it finishes, a Confidence Score appears — the AI rated its own answer. Since I used Professional Rewrite, a Tone badge appears — clicking it shows before/after formality scores and keywords."
-
-**[1:05–1:20] Flashcards**
-> "I'll switch to Quiz mode. After the response, 5 quiz cards appear below — I can flip them with a click, mark Got it or Again, and track my score. This turns the app into a full study tool."
-
-**[1:20–1:35] Heatmap + Word Cloud + Insights**
-> "The Activity button shows a 91-day GitHub-style heatmap of my usage. Below the panels, my most studied topic words appear as a live word cloud. The insights card tells me my top mode, average response time, and topics I study most."
-
-**[1:35–1:50] Export + Chaining**
-> "I can copy, export as Markdown or PDF with one click. The Chain selector feeds this response directly into another mode — so I can Summarize → Quiz → Flashcards in a pipeline."
-
-**[1:50–2:00] Closing**
-> "Dark mode, 10 languages, full keyboard shortcuts, rate limiting, and response caching — all production ready. Thanks for watching!"
-
----
 
 ## 🔧 Future Improvements
 
@@ -257,22 +200,6 @@ Top 20 studied topics rendered as sized colored chips, sized by frequency.
 - [ ] Custom prompt template builder with `{input}` placeholder
 - [ ] Deploy to Railway / Render with one-click
 
----
-
-## 🐙 GitHub Setup
-
-```bash
-git init
-git add .
-git commit -m "feat: PromptCraft v3 — full feature suite"
-git remote add origin https://github.com/YOUR_USERNAME/prompt-craft.git
-git branch -M main
-git push -u origin main
-```
-
-> ⚠️ Never push `.env` — it's in `.gitignore`.
-
----
 
 ## 🛠️ Tech Stack
 
@@ -286,9 +213,3 @@ git push -u origin main
 | Audio | Web Audio API (typewriter sound) |
 | Storage | localStorage (history, theme, ratings) |
 | Fonts | Inter, JetBrains Mono |
-
----
-
-## 📄 License
-
-MIT © 2024
