@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PromptCraft — AI Prompt Toolkit</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ══ Header ═══════════════════════════════════ -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">✦</span>
+      <span class="logo-text">PromptCraft</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-header" id="heatmapBtn">📅 Activity</button>
+      <button class="btn-header" id="statsBtn">📊 Stats</button>
+      <button class="btn-header" id="shortcutsBtn">⌨ Shortcuts</button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><span class="theme-icon">🌙</span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ Main Layout ═══════════════════════════════ -->
+<main class="main-layout">
+
+  <!-- ── Left Panel ─────────────────────────────── -->
+  <section class="panel panel-left">
+    <h2 class="panel-title">Your Input</h2>
+
+    <!-- Mode Cards -->
+    <div class="field-group">
+      <label class="field-label">Prompt Mode</label>
+      <div class="mode-cards" id="modeCards">
+        <button class="mode-card active" data-mode="eli5">🧒<span>ELI5</span></button>
+        <button class="mode-card" data-mode="professional">💼<span>Professional</span></button>
+        <button class="mode-card" data-mode="summarize">📋<span>Summarize</span></button>
+        <button class="mode-card" data-mode="quiz">🧠<span>Quiz</span></button>
+        <button class="mode-card" data-mode="interview">🎯<span>Interview</span></button>
+        <button class="mode-card" data-mode="studyplan">📅<span>Study Plan</span></button>
+        <button class="mode-card" data-mode="teacher">👩‍🏫<span>Teacher</span></button>
+        <button class="mode-card" data-mode="mentor">🧭<span>Mentor</span></button>
+      </div>
+      <p class="mode-description" id="modeDescription"></p>
+    </div>
+
+    <!-- Language + Length Row -->
+    <div class="two-col-row">
+      <div class="field-group" style="margin-bottom:0">
+        <label class="field-label">Language</label>
+        <div class="select-wrapper">
+          <select id="langSelect" class="select select-sm">
+            <option value="en">🇺🇸 English</option>
+            <option value="hi">🇮🇳 Hindi</option>
+            <option value="es">🇪🇸 Spanish</option>
+            <option value="fr">🇫🇷 French</option>
+            <option value="de">🇩🇪 German</option>
+            <option value="ja">🇯🇵 Japanese</option>
+            <option value="zh">🇨🇳 Chinese</option>
+            <option value="ar">🇸🇦 Arabic</option>
+            <option value="pt">🇧🇷 Portuguese</option>
+            <option value="ru">🇷🇺 Russian</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label class="field-label">Length</label>
+        <div class="length-toggle">
+          <button class="length-btn active" data-length="short">Short</button>
+          <button class="length-btn" data-length="medium">Medium</button>
+          <button class="length-btn" data-length="detailed">Detailed</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prompt Score Bar -->
+    <div class="prompt-score-row" id="promptScoreRow">
+      <span class="prompt-score-label">Prompt Quality</span>
+      <div class="prompt-score-track"><div class="prompt-score-fill" id="promptScoreFill"></div></div>
+      <span class="prompt-score-value" id="promptScoreValue">—</span>
+    </div>
+
+    <!-- Drag & Drop Textarea -->
+    <div class="field-group">
+      <label class="field-label" for="userInput">
+        Enter text or drop a .txt file
+        <span class="char-counter" id="charCounter">0 / 2000</span>
+      </label>
+      <div class="textarea-wrapper" id="dropZone">
+        <textarea id="userInput" class="textarea" placeholder="Type, paste, or drag & drop a .txt file here… (Ctrl+Enter to submit)" maxlength="2000" rows="7" spellcheck="true"></textarea>
+        <div class="drop-overlay" id="dropOverlay">
+          <span>📂 Drop your file here</span>
+        </div>
+      </div>
+      <p class="error-msg hidden" id="errorMsg" role="alert"></p>
+    </div>
+
+    <div class="input-meta-row">
+      <span class="word-count" id="wordCount">0 words</span>
+      <button class="btn-link" id="autoDetectBtn">🤖 Auto-detect mode</button>
+      <button class="btn-link" id="improvePromptBtn">✨ Improve prompt</button>
+    </div>
+
+    <!-- Prompt Preview -->
+    <details class="prompt-preview" id="promptPreviewDetails">
+      <summary>👁 Preview full prompt</summary>
+      <pre class="prompt-preview-text" id="promptPreviewText"></pre>
+    </details>
+
+    <!-- Chain Mode -->
+    <div class="chain-row">
+      <span class="chain-label">⛓ Chain to next mode:</span>
+      <div class="select-wrapper chain-select-wrap">
+        <select id="chainSelect" class="select select-sm">
+          <option value="">None</option>
+          <option value="summarize">→ Summarize</option>
+          <option value="quiz">→ Quiz</option>
+          <option value="eli5">→ ELI5</option>
+          <option value="teacher">→ Teacher</option>
+          <option value="professional">→ Professional</option>
+        </select>
+      </div>
+    </div>
+
+    <button id="submitBtn" class="btn btn-primary">
+      <span class="btn-spinner hidden" id="btnSpinner"></span>
+      <span class="btn-text">Generate Response</span>
+      <span class="btn-icon">→</span>
+    </button>
+    <button id="clearBtn" class="btn btn-ghost">Clear</button>
+  </section>
+
+  <!-- ── Right Panel ─────────────────────────────── -->
+  <section class="panel panel-right">
+    <div class="response-header">
+      <h2 class="panel-title">
+        Response
+        <span class="cache-badge hidden" id="cacheBadge">⚡ cached</span>
+      </h2>
+      <div class="response-actions">
+        <button class="btn-icon-only hidden" id="exportMdBtn">📄 MD</button>
+        <button class="btn-icon-only hidden" id="exportPdfBtn">📑 PDF</button>
+        <button class="btn-icon-only hidden" id="copyBtn">📋 Copy</button>
+      </div>
+    </div>
+
+    <!-- Confidence + Tone (shows after response) -->
+    <div class="ai-meta-row hidden" id="aiMetaRow">
+      <div class="confidence-badge" id="confidenceBadge">
+        <span class="conf-label">Confidence</span>
+        <div class="conf-bar-track"><div class="conf-bar-fill" id="confBarFill"></div></div>
+        <span class="conf-value" id="confValue">—</span>
+      </div>
+      <div class="tone-badge hidden" id="toneBadge">
+        <span class="tone-before" id="toneBefore"></span>
+        <span class="tone-arrow">→</span>
+        <span class="tone-after" id="toneAfter"></span>
+      </div>
+    </div>
+
+    <!-- Skeleton Loading -->
+    <div class="loading-state hidden" id="loadingState">
+      <div class="skeleton-lines">
+        <div class="skeleton-line w-90"></div>
+        <div class="skeleton-line w-75"></div>
+        <div class="skeleton-line w-85"></div>
+        <div class="skeleton-line w-60"></div>
+        <div class="skeleton-line w-80"></div>
+        <div class="skeleton-line w-70"></div>
+      </div>
+    </div>
+
+    <!-- Response Box -->
+    <div class="response-box" id="responseBox">
+      <div class="response-placeholder" id="responsePlaceholder">
+        <span class="placeholder-icon">✦</span>
+        <p>Your AI-generated response will appear here.</p>
+        <p class="placeholder-hint">Select a mode and enter your text to get started.</p>
+      </div>
+      <div class="response-content hidden" id="responseContent"></div>
+    </div>
+
+    <!-- Response Meta -->
+    <div class="response-meta hidden" id="responseMeta">
+      <div class="meta-left">
+        <span class="meta-badge" id="metaMode"></span>
+        <span class="meta-stats" id="metaStats"></span>
+      </div>
+      <span class="meta-time" id="metaTime"></span>
+    </div>
+
+    <!-- Rating -->
+    <div class="rating-row hidden" id="ratingRow">
+      <span class="rating-label">Was this helpful?</span>
+      <button class="rating-btn" id="rateUp">👍</button>
+      <button class="rating-btn" id="rateDown">👎</button>
+      <span class="rating-feedback hidden" id="ratingFeedback"></span>
+    </div>
+
+    <!-- Follow-ups -->
+    <div class="followups-section hidden" id="followupsSection">
+      <p class="followups-label">💡 Follow-up questions</p>
+      <div class="followups-list" id="followupsList"></div>
+    </div>
+  </section>
+</main>
+
+<!-- ══ Flashcard Section (Quiz mode only) ════════ -->
+<section class="flashcard-section hidden" id="flashcardSection">
+  <div class="flashcard-header">
+    <h3 class="flashcard-title">🃏 Flashcard Mode</h3>
+    <div class="flashcard-controls">
+      <span class="flashcard-progress" id="flashcardProgress"></span>
+      <button class="btn-header" id="prevCard">← Prev</button>
+      <button class="btn-header" id="nextCard">Next →</button>
+      <button class="btn-header" id="resetCards">Reset</button>
+    </div>
+  </div>
+  <div class="flashcard-arena">
+    <div class="flashcard" id="flashcard">
+      <div class="flashcard-inner" id="flashcardInner">
+        <div class="flashcard-front" id="flashcardFront"></div>
+        <div class="flashcard-back" id="flashcardBack"></div>
+      </div>
+    </div>
+    <div class="flashcard-actions">
+      <button class="fc-btn fc-wrong" id="fcWrong">✗ Again</button>
+      <button class="fc-btn fc-flip" id="fcFlip">↩ Flip</button>
+      <button class="fc-btn fc-right" id="fcRight">✓ Got it</button>
+    </div>
+    <div class="flashcard-stats">
+      <span class="fc-stat fc-stat-right">✓ <span id="fcRight_count">0</span></span>
+      <span class="fc-stat fc-stat-wrong">✗ <span id="fcWrong_count">0</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ Insights Card ══════════════════════════════ -->
+<section class="insights-section" id="insightsSection">
+  <div class="insights-card" id="insightsCard">
+    <span class="insights-icon">🧠</span>
+    <div class="insights-text" id="insightsText">Generate some responses to see your personal insights here.</div>
+  </div>
+</section>
+
+<!-- ══ Heatmap Calendar ═══════════════════════════ -->
+<section class="heatmap-section hidden" id="heatmapSection">
+  <div class="heatmap-header">
+    <h3>📅 Activity Heatmap</h3>
+    <button class="modal-close" id="closeHeatmap">✕</button>
+  </div>
+  <div class="heatmap-grid" id="heatmapGrid"></div>
+  <div class="heatmap-legend">
+    <span>Less</span>
+    <div class="legend-squares">
+      <div class="hm-cell" style="--intensity:0"></div>
+      <div class="hm-cell" style="--intensity:1"></div>
+      <div class="hm-cell" style="--intensity:2"></div>
+      <div class="hm-cell" style="--intensity:3"></div>
+      <div class="hm-cell" style="--intensity:4"></div>
+    </div>
+    <span>More</span>
+  </div>
+</section>
+
+<!-- ══ Word Cloud ════════════════════════════════ -->
+<section class="wordcloud-section" id="wordcloudSection">
+  <h3 class="wordcloud-title">🔤 Your Most Studied Topics</h3>
+  <div class="wordcloud-wrap" id="wordcloudWrap"></div>
+</section>
+
+<!-- ══ Chat History ══════════════════════════════ -->
+<section class="history-section">
+  <div class="history-header">
+    <h3 class="history-title">Chat History</h3>
+    <div class="history-controls">
+      <input type="text" class="history-search" id="historySearch" placeholder="Search history…"/>
+      <button class="btn btn-ghost btn-sm" id="clearHistoryBtn">Clear All</button>
+    </div>
+  </div>
+  <div class="history-list" id="historyList">
+    <p class="history-empty">No history yet. Generate a response to get started!</p>
+  </div>
+</section>
+
+<footer class="footer">
+  Powered by <strong>Groq · LLaMA 3.3 70B</strong> · Built with Node.js + Express
+</footer>
+
+<!-- ══ Modals ═════════════════════════════════════ -->
+<!-- Shortcuts -->
+<div class="modal-overlay hidden" id="shortcutsModal">
+  <div class="modal">
+    <div class="modal-header"><h3>⌨ Keyboard Shortcuts</h3><button class="modal-close" id="closeShortcuts">✕</button></div>
+    <div class="modal-body shortcuts-grid">
+      <kbd>Ctrl+Enter</kbd><span>Submit / Generate</span>
+      <kbd>Ctrl+K</kbd><span>Clear input</span>
+      <kbd>Ctrl+D</kbd><span>Toggle dark mode</span>
+      <kbd>Ctrl+Shift+C</kbd><span>Copy response</span>
+      <kbd>Ctrl+I</kbd><span>Improve prompt</span>
+      <kbd>Ctrl+M</kbd><span>Auto-detect mode</span>
+      <kbd>?</kbd><span>Show shortcuts</span>
+      <kbd>Esc</kbd><span>Close modals</span>
+    </div>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="modal-overlay hidden" id="statsModal">
+  <div class="modal modal-wide">
+    <div class="modal-header"><h3>📊 Usage Stats</h3><button class="modal-close" id="closeStats">✕</button></div>
+    <div class="modal-body" id="statsBody"></div>
+  </div>
+</div>
+
+<!-- Prompt Improver Result -->
+<div class="modal-overlay hidden" id="improveModal">
+  <div class="modal modal-wide">
+    <div class="modal-header"><h3>✨ Improved Prompt</h3><button class="modal-close" id="closeImprove">✕</button></div>
+    <div class="modal-body">
+      <div class="improve-grid">
+        <div>
+          <p class="improve-label">Original</p>
+          <div class="improve-box" id="improveOriginal"></div>
+        </div>
+        <div>
+          <p class="improve-label">Improved ✨</p>
+          <div class="improve-box improve-box-new" id="improveNew"></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="useImprovedBtn" style="margin-top:16px">Use Improved Prompt →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tone Analyzer Modal -->
+<div class="modal-overlay hidden" id="toneModal">
+  <div class="modal">
+    <div class="modal-header"><h3>🎨 Tone Analysis</h3><button class="modal-close" id="closeTone">✕</button></div>
+    <div class="modal-body" id="toneBody"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+<!-- Typewriter sound -->
+<audio id="tickSound" preload="auto">
+  <source src="data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUoAAAAA" type="audio/wav"/>
+</audio>
+
+<script src="js/app.js"></script>
+</body>
+</html>

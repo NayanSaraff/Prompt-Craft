@@ -1,0 +1,29 @@
+{
+  "name": "prompt-craft",
+  "version": "1.0.0",
+  "description": "AI-powered prompt toolkit using Groq API (llama-3.3-70b-versatile)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [
+    "groq",
+    "ai",
+    "prompt",
+    "llm",
+    "llama"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.5.2",
+    "groq-sdk": "^1.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
